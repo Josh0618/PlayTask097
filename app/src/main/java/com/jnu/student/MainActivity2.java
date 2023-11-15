@@ -1,7 +1,12 @@
 package com.jnu.student;
 
-import androidx.appcompat.app.AppCompatActivity;
+import static com.jnu.student.R.id.recycler_view;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.os.Bundle;
 
@@ -9,24 +14,28 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Collections;
+import java.util.List;
+
 public class MainActivity2 extends AppCompatActivity {
-    private TextView textView;
-    private TextView textView2;
+    private RecyclerView recyclerView;
+    private BookAdapter adapter;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // 设置布局
+        setContentView(R.layout.activity_main);
 
-        // 通过ID找到TextView
-        TextView helloTextView = findViewById(R.id.text_view_hello_world);
+        recyclerView = findViewById(recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this)); // 设置布局管理器，例如 LinearLayoutManager
 
-        // 通过资源名称获取字符串资源并设置给TextView
-        String greeting = getResources().getString(R.string.hello_andriod);
-        helloTextView.setText(greeting);
-        textView = findViewById(R.id.textView);
-        textView2 = findViewById(R.id.textView2);
+        BookListMainActivity bookListMainActivity = new BookListMainActivity();
+        List<Book> bookList = bookListMainActivity.getListBooks();
+
+        adapter = new BookAdapter(bookList);
+        recyclerView.setAdapter(adapter);
     }
-    public void swapText(View view) {
+    /*public void swapText(View view) {
         String text1 = textView.getText().toString();
         String text2 = textView2.getText().toString();
 
@@ -42,5 +51,5 @@ public class MainActivity2 extends AppCompatActivity {
                 .setMessage("文本已成功交换")
                 .setPositiveButton("确定", null)
                 .show();
-    }
+    }*/
 }
