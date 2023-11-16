@@ -1,8 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">我的第一个应用</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="hello_andriod">你好Android</string>
-    <string name="hello">Hello</string>
-    <string name="jnu">JNU</string>
-    <string name="change_text">change text</string>
+    <string name="title_activity_main">MainActivity2</string>
 </resources>
