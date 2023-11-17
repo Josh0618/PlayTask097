@@ -1,14 +1,14 @@
 package com.jnu.student;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,21 +20,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity2 extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private List<Book> books;
+    private View emptyStateLayout;
+    private List<Book> books = new ArrayList<>();
+    private RecyclerViewBookAdapter adapter;
     ActivityResultLauncher<Intent> launcher;
 
-    public static final int MENU_ADD = 1;
-    public static final int MENU_EDIT = 2;
-    public static final int MENU_DELETE = 3;
-
-
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,32 +40,60 @@ public class MainActivity2 extends AppCompatActivity {
         // 获取书籍列表
         books = getListBooks();
 
-        // 初始化 RecyclerView
+        emptyStateLayout = findViewById(R.id.emptyStateLayout);
+
         recyclerView = findViewById(R.id.recycle_view_books);
+        adapter = new RecyclerViewBookAdapter(books);
+        registerForContextMenu(recyclerView);
         RecyclerViewBookAdapter adapter = new RecyclerViewBookAdapter(books);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        recyclerView.requestFocus();
 
-        launcher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent data = result.getData();
-                        // 处理返回的数据
-                        if (data != null) {
-                            // 从返回的 Intent 中提取数据，这里假设您返回的数据为 Book 对象
-                            Book newBook = (Book) data.getSerializableExtra("newBook");
 
-                            // 将新的 Book 对象添加到 RecyclerView 的数据源中
-                            // 这里需要您实现相应的添加逻辑，比如更新适配器数据并刷新 RecyclerView
-                            // adapter.addBook(newBook);
-                            // adapter.notifyDataSetChanged();
+        if (books.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyStateLayout.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyStateLayout.setVisibility(View.GONE);
+        }
+
+
+        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            GestureDetector gestureDetector = new GestureDetector(MainActivity2.this, new GestureDetector.SimpleOnGestureListener() {
+                @Override
+                public void onLongPress(MotionEvent e) {
+                    View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                    if (child != null) {
+                        // Show context menu
+                        int position = recyclerView.getChildAdapterPosition(child);
+                        if (position != RecyclerView.NO_POSITION) {
+                            openContextMenu(child);
                         }
                     }
-                });
+                }
+            });
+
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                gestureDetector.onTouchEvent(e);
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+            }
+        });
+
+        registerForContextMenu(recyclerView);
+
     }
 
-    // 模拟书籍列表数据
     public List<Book> getListBooks() {
         List<Book> bookList = new ArrayList<>();
         bookList.add(new Book("软件项目管理案例教程（第4版）", R.drawable.book_2));
@@ -77,33 +102,28 @@ public class MainActivity2 extends AppCompatActivity {
         return bookList;
     }
 
-    // 在主 Activity 中的某个方法中，比如在创建ContextMenu时，启动另一个 Activity
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId() == R.id.recycle_view_books) {
-            menu.add(Menu.NONE, MENU_ADD, Menu.NONE, "Add");
-            menu.add(Menu.NONE, MENU_EDIT, Menu.NONE, "Edit");
-            menu.add(Menu.NONE, MENU_DELETE, Menu.NONE, "Delete");
-        }
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
     }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case MENU_ADD:
-                // 添加逻辑，启动另一个 Activity
-                Intent intent = new Intent(this, BookDetailsActivity.class);
-                launcher.launch(intent);
-                return true;
-            case MENU_EDIT:
-                // 编辑逻辑
-                return true;
-            case MENU_DELETE:
-                // 删除逻辑
-                return true;
-            default:
-                return super.onContextItemSelected(item);
+        int itemId = item.getItemId();
+
+        if (itemId == R.id.add_item) {
+
+            return true;
+        } else if (itemId == R.id.edit_item) {
+
+            return true;
+        } else if (itemId == R.id.delete_item) {
+
+            return true;
+        } else {
+            return super.onContextItemSelected(item);
         }
     }
 
@@ -120,6 +140,10 @@ class Book {
 
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getCoverResourceId() {
@@ -139,6 +163,7 @@ class RecyclerViewBookAdapter extends RecyclerView.Adapter<RecyclerViewBookAdapt
     @Override
     public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent, false);
+
         return new BookViewHolder(view);
     }
 
@@ -163,6 +188,7 @@ class RecyclerViewBookAdapter extends RecyclerView.Adapter<RecyclerViewBookAdapt
             bookCover = itemView.findViewById(R.id.image_view_book_cover);
             bookTitle = itemView.findViewById(R.id.text_view_book_title);
         }
+
     }
 }
 
