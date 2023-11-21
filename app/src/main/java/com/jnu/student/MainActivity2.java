@@ -93,14 +93,14 @@ public class MainActivity2 extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // 添加新建菜单项
-        menu.add(Menu.NONE, Menu.FIRST + 3, Menu.NONE, "新建");
+        menu.add(0, 3, Menu.NONE, "新建");
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // 处理新建菜单项的点击事件
-        if (item.getItemId() == Menu.FIRST + 3) {
+        if (item.getItemId() == 3) {
             Intent newBookIntent = new Intent(MainActivity2.this, BookDetailsActivity.class);
             addItemLauncher.launch(newBookIntent);
             return true;
@@ -147,7 +147,7 @@ public class MainActivity2 extends AppCompatActivity {
             addItemLauncher.launch(newBookIntent);
             return true;
         }
-        return true;
+        return super.onContextItemSelected(item);
     }
 
     public static class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
