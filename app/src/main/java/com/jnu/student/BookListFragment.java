@@ -89,10 +89,9 @@ public class BookListFragment extends Fragment {
         books = new DataBank().LoadBooks(requireActivity());
         if(0 == books.size()) {
             books.add(new Book("软件项目管理案例教程（第4版）", R.drawable.book_2));
+            books.add(new Book("创新工程实践", R.drawable.book_no_name));
+            books.add(new Book("信息安全数学基础（第2版）", R.drawable.book_1));
         }
-        //books.add(new Book("软件项目管理案例教程（第4版）", R.drawable.book_2));
-        //books.add(new Book("创新工程实践", R.drawable.book_no_name));
-        //books.add(new Book("信息安全数学基础（第2版）", R.drawable.book_1));
 
         bookAdapter = new BookAdapter(books);
         mainRecyclerView.setAdapter(bookAdapter);
