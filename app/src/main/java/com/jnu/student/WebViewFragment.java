@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -17,6 +18,7 @@ import android.webkit.WebViewClient;
  */
 public class WebViewFragment extends Fragment {
 
+    private WebView webView;
     public WebViewFragment() {
         // Required empty public constructor
     }
@@ -41,10 +43,14 @@ public class WebViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_web_view, container, false);
-        WebView webView = rootView.findViewById(R.id.webview);
-        webView.getSettings().setJavaScriptEnabled(true); // 启用JavaScript支持
-        webView.setWebViewClient(new WebViewClient()); // 设置WebView客户端
-        webView.loadUrl("http://baidu.com");
+        webView = rootView.findViewById(R.id.webview);
+
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+
+        webView.setWebViewClient(new WebViewClient());
+
+        webView.loadUrl("<http://baidu.com>");
         return rootView;
     }
 }

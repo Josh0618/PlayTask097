@@ -8,6 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.tencent.tencentmap.mapsdk.maps.CameraUpdateFactory;
+import com.tencent.tencentmap.mapsdk.maps.TencentMap;
+import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptorFactory;
+import com.tencent.tencentmap.mapsdk.maps.model.LatLng;
+import com.tencent.tencentmap.mapsdk.maps.model.Marker;
+import com.tencent.tencentmap.mapsdk.maps.model.MarkerOptions;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link TencentMapFragment#newInstance} factory method to
@@ -55,10 +62,68 @@ public class TencentMapFragment extends Fragment {
         }
     }
 
+    private com.tencent.tencentmap.mapsdk.maps.TextureMapView mapView = null;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_tencent_map, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_tencent_map, container, false);
+        mapView = rootView.findViewById(R.id.mapView);
+
+        TencentMap tencentMap = mapView.getMap();
+        tencentMap.setBuildingEnable(false);
+
+        LatLng jinanUniversityLatLng = new LatLng(22.249942,113.534341);
+
+        tencentMap.moveCamera(CameraUpdateFactory.newLatLngZoom(jinanUniversityLatLng, tencentMap.getMaxZoomLevel()));
+
+        MarkerOptions markerOptions = new MarkerOptions(jinanUniversityLatLng)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+        Marker iconMarker = tencentMap.addMarker(markerOptions);
+
+        iconMarker.setTitle("珠海暨南大学");
+
+        tencentMap.setOnMarkerClickListener(marker -> {
+            // 处理标记点击事件
+            if (marker.getTitle() != null && marker.getTitle().equals("珠海暨南大学")) {
+                // 在这里执行相应的操作
+            }
+            return false;
+        });
+
+        return rootView;
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mapView != null) {
+            mapView.onDestroy();
+            mapView = null;
+        }
+    }
+
 }
