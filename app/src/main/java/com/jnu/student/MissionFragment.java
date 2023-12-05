@@ -1,50 +1,47 @@
 package com.jnu.student;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+public class MissionFragment extends Fragment {
 
-public class MainActivity2 extends AppCompatActivity {
+    public MissionFragment() {
+        // Required empty public constructor
+    }
 
-    private String []tabHeaderStrings = {"Shopping items","Tencent maps","News"};
+    private String []tabHeaderStrings = {"每日任务","每周任务","副本任务"};
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        if (getArguments() != null) {
+
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View rootView=inflater.inflate(R.layout.fragment_mission, container, false);
+
         // 获取ViewPager2和TabLayout的实例
-        ViewPager2 viewPager = findViewById(R.id.view_pager);
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        ViewPager2 viewPager = rootView.findViewById(R.id.view_pager);
+        TabLayout tabLayout = rootView.findViewById(R.id.tab_layout);
         // 创建适配器
-        FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), getLifecycle());
+        MissionFragment.FragmentAdapter fragmentAdapter = new MissionFragment.FragmentAdapter(getParentFragmentManager(), getLifecycle());
         viewPager.setAdapter(fragmentAdapter);
 
 
@@ -52,6 +49,8 @@ public class MainActivity2 extends AppCompatActivity {
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> tab.setText(tabHeaderStrings[position])
         ).attach();
+
+        return rootView;
     }
 
     public class FragmentAdapter extends FragmentStateAdapter {
@@ -66,11 +65,11 @@ public class MainActivity2 extends AppCompatActivity {
             // 根据位置返回对应的Fragment实例
             switch (position) {
                 case 0:
-                    return new BookListFragment();
+                    return new DailyTasksFragment();
                 case 1:
-                    return new TencentMapFragment();
+                    return new WeeklyTasksFragment();
                 case 2:
-                    return new WebViewFragment();
+                    return new DungeonTaskFragment();
                 default:
                     return null;
             }
@@ -82,15 +81,3 @@ public class MainActivity2 extends AppCompatActivity {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-

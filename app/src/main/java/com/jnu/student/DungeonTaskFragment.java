@@ -7,24 +7,22 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link WebViewFragment#newInstance} factory method to
+ * Use the {@link DungeonTaskFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class WebViewFragment extends Fragment {
+public class DungeonTaskFragment extends Fragment {
 
     private WebView webView;
-    public WebViewFragment() {
+    public DungeonTaskFragment() {
         // Required empty public constructor
     }
 
-    public static WebViewFragment newInstance() {
-        WebViewFragment fragment = new WebViewFragment();
+    public static DungeonTaskFragment newInstance() {
+        DungeonTaskFragment fragment = new DungeonTaskFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -43,14 +41,6 @@ public class WebViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_web_view, container, false);
-        webView = rootView.findViewById(R.id.webview);
-
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setJavaScriptEnabled(true);
-
-        webView.setWebViewClient(new WebViewClient());
-
-        webView.loadUrl("<http://baidu.com>");
         return rootView;
     }
 }
