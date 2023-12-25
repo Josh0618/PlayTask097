@@ -1,6 +1,7 @@
 package com.jnu.student;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> tab.setText(tabHeaderStrings[position])
         ).attach();
+
     }
 
     public class FragmentAdapter extends FragmentStateAdapter {
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
             return NUM_TABS;
         }
     }
+
 }
 
 

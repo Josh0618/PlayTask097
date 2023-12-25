@@ -20,8 +20,9 @@
             android:value="XXFBZ-6KSCL-HPFP2-MLTT4-F67BT-PTFHG"/>
 
         <activity
-            android:name=".BookDetailsActivity"
+            android:name=".NewMissionActivity"
             android:exported="false" />
+
 
         <activity
             android:name=".MainActivity"

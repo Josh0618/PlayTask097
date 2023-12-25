@@ -1,4 +1,4 @@
-package com.jnu.student;
+package com.jnu.student.data;
 import android.content.Context;
 import android.util.Log;
 
@@ -10,14 +10,14 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class DataBank {
-    final String DATA_FILENAME = "books.data";
+    final String DATA_FILENAME = "mission.data";
 
-    public ArrayList<Book> LoadBooks(Context context) {
-        ArrayList<Book> data = new ArrayList<>();
+    public ArrayList<Mission> LoadMissions(Context context) {
+        ArrayList<Mission> data = new ArrayList<>();
         try {
             FileInputStream fileIn = context.openFileInput(DATA_FILENAME);
             ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-            data = (ArrayList<Book>) objectIn.readObject();
+            data = (ArrayList<Mission>) objectIn.readObject();
             objectIn.close();
             fileIn.close();
             Log.d("Serialization", "Data loaded successfully.item count" + data.size());
@@ -27,11 +27,11 @@ public class DataBank {
         return data;
     }
 
-    public void SaveBooks(Context context, ArrayList<Book> books) {
+    public void SaveMissions(Context context, ArrayList<Mission> missions) {
         try {
             FileOutputStream fileOut = context.openFileOutput(DATA_FILENAME, Context.MODE_PRIVATE);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(books);
+            out.writeObject(missions);
             out.close();
             fileOut.close();
             Log.d("Serialization", "Data is serialized and saved.");
