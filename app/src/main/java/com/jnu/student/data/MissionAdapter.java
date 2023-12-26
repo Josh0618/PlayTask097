@@ -10,7 +10,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.jnu.student.DailyTasksFragment;
 import com.jnu.student.R;
+import com.jnu.student.WeeklyTasksFragment;
 
 import java.util.ArrayList;
 
@@ -87,6 +90,8 @@ public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHold
                 if (signalListener != null) {
                     signalListener.onSignalReceived();
                 }
+                DailyTasksFragment.pointTextView.setText(String.valueOf(Points.points));
+                WeeklyTasksFragment.pointTextView.setText(String.valueOf(Points.points));
                 // 更新任务的完成状态
                 viewHolder.checkBox.setChecked(missionArrayList.get(position).isCompleted());
                 viewHolder.getTextViewTimes().setText(missionArrayList.get(position).getComplete() +"/"+ missionArrayList.get(position).getTimes());

@@ -7,9 +7,10 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.jnu.student.DailyTasksFragment;
+import com.jnu.student.WeeklyTasksFragment;
 
 public class FragmentAdapter extends FragmentStateAdapter {
-    private static final int NUM_TABS = 1;
+    private static final int NUM_TABS = 2;
     public FragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
         super(fragmentManager, lifecycle);
     }
@@ -21,6 +22,8 @@ public class FragmentAdapter extends FragmentStateAdapter {
         switch (position) {
             case 0:
                 return new DailyTasksFragment();
+            case 1:
+                return new WeeklyTasksFragment();
             default:
                 return null;
         }

@@ -1,13 +1,30 @@
 package com.jnu.student;
 
+import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.jnu.student.data.DataBank;
+import com.jnu.student.data.Mission;
+import com.jnu.student.data.MissionAdapter;
+import com.jnu.student.data.Points;
 import com.tencent.tencentmap.mapsdk.maps.CameraUpdateFactory;
 import com.tencent.tencentmap.mapsdk.maps.TencentMap;
 import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptorFactory;
@@ -15,40 +32,17 @@ import com.tencent.tencentmap.mapsdk.maps.model.LatLng;
 import com.tencent.tencentmap.mapsdk.maps.model.Marker;
 import com.tencent.tencentmap.mapsdk.maps.model.MarkerOptions;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link WeeklyTasksFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+
 public class WeeklyTasksFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public WeeklyTasksFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment WeeklyTasksFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static WeeklyTasksFragment newInstance(String param1, String param2) {
+    public static WeeklyTasksFragment newInstance() {
         WeeklyTasksFragment fragment = new WeeklyTasksFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,74 +50,107 @@ public class WeeklyTasksFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        setHasOptionsMenu(true);
     }
 
-    private com.tencent.tencentmap.mapsdk.maps.TextureMapView mapView = null;
+    private ArrayList<Mission> weeklyTasks = new ArrayList<>();
+    private MissionAdapter missionAdapter;
+    public static TextView pointTextView;
+    ActivityResultLauncher<Intent> addItemLauncher;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_weekly_tasks, container, false);
-        mapView = rootView.findViewById(R.id.mapView);
+        RecyclerView mainRecyclerView = rootView.findViewById(R.id.recycle_view_books);
+        mainRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
-        TencentMap tencentMap = mapView.getMap();
-        tencentMap.setBuildingEnable(false);
+        weeklyTasks = new DataBank().LoadMissions(requireActivity());
+        if(0 == weeklyTasks.size()) {
+            weeklyTasks.add(new Mission("整理房间", 70, 1));
+        }
 
-        LatLng jinanUniversityLatLng = new LatLng(22.249942,113.534341);
+        // 创建并设置适配器
+        missionAdapter = new MissionAdapter(weeklyTasks);
+        mainRecyclerView.setAdapter(missionAdapter);
+        missionAdapter.setSignalListener(this::onSignalReceived);
 
-        tencentMap.moveCamera(CameraUpdateFactory.newLatLngZoom(jinanUniversityLatLng, tencentMap.getMaxZoomLevel()));
+        // 在 RecyclerView 上注册上下文菜单
+        registerForContextMenu(mainRecyclerView);
 
-        MarkerOptions markerOptions = new MarkerOptions(jinanUniversityLatLng)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+        pointTextView = rootView.findViewById(R.id.textView_points);
+        pointTextView.setText(String.valueOf(Points.points));
 
-        Marker iconMarker = tencentMap.addMarker(markerOptions);
+        addItemLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null){
+                            String name = data.getStringExtra("name");
+                            int point = data.getIntExtra("point", 0);
+                            int times = data.getIntExtra("times", 1);
 
-        iconMarker.setTitle("珠海暨南大学");
-
-        tencentMap.setOnMarkerClickListener(marker -> {
-            // 处理标记点击事件
-            if (marker.getTitle() != null && marker.getTitle().equals("珠海暨南大学")) {
-                // 在这里执行相应的操作
-            }
-            return false;
-        });
-
+                            weeklyTasks.add(new Mission(name, point, times));
+                            missionAdapter.notifyItemInserted(weeklyTasks.size());
+                        }
+                    } else if (result.getResultCode() == Activity.RESULT_CANCELED) {
+                        // 处理取消操作
+                    }
+                }
+        );
         return rootView;
     }
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_new_task, menu);
+        super.onCreateOptionsMenu(menu, inflater);
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mapView.onStart();
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
-    @Override
-    public void onStop() {
-        super.onStop();
-        mapView.onStop();
-    }
-    @Override
-    public void onPause() {
-        super.onPause();
-        mapView.onPause();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mapView != null) {
-            mapView.onDestroy();
-            mapView = null;
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_new_task) {
+            Intent intent = new Intent(getActivity(), NewMissionActivity.class);
+            addItemLauncher.launch(intent);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case 0:
+                AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+                builder.setTitle("Delete Mission");
+                builder.setMessage("Are you sure you want to delete this Mission?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        weeklyTasks.remove(item.getOrder());
+                        missionAdapter.notifyItemRemoved(item.getOrder());
+
+                        new DataBank().SaveMissions(requireActivity(), weeklyTasks);
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                builder.create().show();
+                break;
+            default:
+                return super.onContextItemSelected(item);
+        }
+        return true;
+    }
+    public void onSignalReceived() {
+        pointTextView.setText(String.valueOf(Points.points));
+    }
+
 
 }

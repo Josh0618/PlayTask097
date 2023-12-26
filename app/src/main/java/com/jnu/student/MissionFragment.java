@@ -7,10 +7,13 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.jnu.student.data.FragmentAdapter;
+import com.jnu.student.data.MissionAdapter;
+import com.jnu.student.data.Points;
 
 public class MissionFragment extends Fragment {
 
@@ -20,7 +23,7 @@ public class MissionFragment extends Fragment {
         // Required empty public constructor
     }
 
-    private String []tabHeaderStrings = {"每日任务"};
+    private String []tabHeaderStrings = {"每日任务","每周任务"};
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +47,7 @@ public class MissionFragment extends Fragment {
         new TabLayoutMediator(tabLayout, viewPager,
                 (tab, position) -> tab.setText(tabHeaderStrings[position])
         ).attach();
+
 
         return rootView;
     }

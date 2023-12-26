@@ -1,18 +1,15 @@
 package com.jnu.student;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -65,7 +62,7 @@ public class DailyTasksFragment extends Fragment {
 
         dailyTasks = new DataBank().LoadMissions(requireActivity());
         if(0 == dailyTasks.size()) {
-            dailyTasks.add(new Mission("Study", 10, 1));
+            dailyTasks.add(new Mission("Study", 10, 2));
         }
 
         // 创建并设置适配器
