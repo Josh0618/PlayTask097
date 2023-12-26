@@ -19,7 +19,7 @@ import com.jnu.student.WeeklyTasksFragment;
 import java.util.ArrayList;
 
 
-public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHolder>{
+public class MissionAdapter extends RecyclerView.Adapter<MissionAdapter.ViewHolder> {
     private ArrayList<Mission> missionArrayList;
     private static SignalListener signalListener;
     public interface SignalListener {

@@ -20,7 +20,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jnu.student.data.DataBank;
+import com.jnu.student.data.DataBankMission;
 import com.jnu.student.data.Mission;
 import com.jnu.student.data.MissionAdapter;
 import com.jnu.student.data.Points;
@@ -57,10 +57,10 @@ public class DailyTasksFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView=inflater.inflate(R.layout.fragment_daily_tasks, container, false);
 
-        RecyclerView mainRecyclerView = rootView.findViewById(R.id.recycle_view_books);
+        RecyclerView mainRecyclerView = rootView.findViewById(R.id.recycle_view_missions);
         mainRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
-        dailyTasks = new DataBank().LoadMissions(requireActivity());
+        dailyTasks = new DataBankMission().LoadMissions(requireActivity());
         if(0 == dailyTasks.size()) {
             dailyTasks.add(new Mission("Study", 10, 2));
         }
@@ -100,16 +100,16 @@ public class DailyTasksFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_new_task, menu);
         super.onCreateOptionsMenu(menu, inflater);
-
+        menu.clear();
+        inflater.inflate(R.menu.menu_new_task, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_new_task) {
-            Intent intent = new Intent(getActivity(), NewMissionActivity.class);
+            Intent intent = new Intent(this.getActivity(), NewMissionActivity.class);
             addItemLauncher.launch(intent);
             return true;
         }
@@ -129,7 +129,7 @@ public class DailyTasksFragment extends Fragment {
                         dailyTasks.remove(item.getOrder());
                         missionAdapter.notifyItemRemoved(item.getOrder());
 
-                        new DataBank().SaveMissions(requireActivity(), dailyTasks);
+                        new DataBankMission().SaveMissions(requireActivity(), dailyTasks);
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

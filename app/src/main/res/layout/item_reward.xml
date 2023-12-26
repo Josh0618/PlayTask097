@@ -17,7 +17,7 @@
         android:gravity="bottom|left">
 
         <TextView
-            android:id="@+id/text_view_mission_title"
+            android:id="@+id/text_view_reward_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
@@ -49,14 +49,9 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:textColor="@android:color/holo_green_dark"
+            android:textColor="@android:color/holo_red_light"
             android:textSize="24sp" />
 
     </LinearLayout>
 
-
-
 </RelativeLayout>
-
-
-

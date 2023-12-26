@@ -16,7 +16,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String []tabHeaderStrings = {"任务","奖励","统计"};
+    private String []tabHeaderStrings = {"任务","奖励"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class FragmentAdapter extends FragmentStateAdapter {
-        private static final int NUM_TABS = 3;
+        private static final int NUM_TABS = 2;
         public FragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
             super(fragmentManager, lifecycle);
         }
@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
                     return new MissionFragment();
                 case 1:
                     return new RewardFragment();
-                case 2:
-                    return new CountFragment();
                 default:
                     return null;
             }

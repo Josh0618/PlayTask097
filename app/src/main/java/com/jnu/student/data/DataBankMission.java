@@ -9,7 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-public class DataBank {
+public class DataBankMission {
     final String DATA_FILENAME = "mission.data";
 
     public ArrayList<Mission> LoadMissions(Context context) {

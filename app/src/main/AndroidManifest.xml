@@ -23,6 +23,9 @@
             android:name=".NewMissionActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".NewRewardActivity"
+            android:exported="false" />
 
         <activity
             android:name=".MainActivity"

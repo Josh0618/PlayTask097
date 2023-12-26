@@ -21,16 +21,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.jnu.student.data.DataBank;
+import com.jnu.student.data.DataBankMission;
 import com.jnu.student.data.Mission;
 import com.jnu.student.data.MissionAdapter;
 import com.jnu.student.data.Points;
-import com.tencent.tencentmap.mapsdk.maps.CameraUpdateFactory;
-import com.tencent.tencentmap.mapsdk.maps.TencentMap;
-import com.tencent.tencentmap.mapsdk.maps.model.BitmapDescriptorFactory;
-import com.tencent.tencentmap.mapsdk.maps.model.LatLng;
-import com.tencent.tencentmap.mapsdk.maps.model.Marker;
-import com.tencent.tencentmap.mapsdk.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 
@@ -63,10 +57,10 @@ public class WeeklyTasksFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_weekly_tasks, container, false);
-        RecyclerView mainRecyclerView = rootView.findViewById(R.id.recycle_view_books);
+        RecyclerView mainRecyclerView = rootView.findViewById(R.id.recycle_view_missions);
         mainRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
-        weeklyTasks = new DataBank().LoadMissions(requireActivity());
+        weeklyTasks = new DataBankMission().LoadMissions(requireActivity());
         if(0 == weeklyTasks.size()) {
             weeklyTasks.add(new Mission("整理房间", 70, 1));
         }
@@ -104,16 +98,16 @@ public class WeeklyTasksFragment extends Fragment {
     }
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_new_task, menu);
         super.onCreateOptionsMenu(menu, inflater);
-
+        menu.clear();
+        inflater.inflate(R.menu.menu_new_task, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_new_task) {
-            Intent intent = new Intent(getActivity(), NewMissionActivity.class);
+            Intent intent = new Intent(this.getActivity(), NewMissionActivity.class);
             addItemLauncher.launch(intent);
             return true;
         }
@@ -133,7 +127,7 @@ public class WeeklyTasksFragment extends Fragment {
                         weeklyTasks.remove(item.getOrder());
                         missionAdapter.notifyItemRemoved(item.getOrder());
 
-                        new DataBank().SaveMissions(requireActivity(), weeklyTasks);
+                        new DataBankMission().SaveMissions(requireActivity(), weeklyTasks);
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

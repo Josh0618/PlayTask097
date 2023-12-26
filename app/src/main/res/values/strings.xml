@@ -13,5 +13,8 @@
     <string name="string_point">成就点数</string>
     <string name="new_tasks">新建任务</string>
     <string name="string_times">数量</string>
+    <string name="reward_title">奖励名称</string>
+    <string name="string_type">奖励类型</string>
+    <string name="new_rewards">新建奖励</string>
 
 </resources>
