@@ -23,7 +23,7 @@ public class MissionFragment extends Fragment {
         // Required empty public constructor
     }
 
-    private String []tabHeaderStrings = {"每日任务","每周任务"};
+    private String []tabHeaderStrings = {"每日任务","每周任务","普通任务"};
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
